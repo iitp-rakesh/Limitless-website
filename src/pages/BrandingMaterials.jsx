@@ -16,7 +16,7 @@ import {
   brandingBenefits,
   brandingProcess,
   brandingSamples,
-} from "../data/brandingMaterialsData";
+} from "../data/BrandingMaterialsData";
 
 function BrandingMaterials() {
   const [showAll, setShowAll] = useState(false);

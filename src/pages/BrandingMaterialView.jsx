@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import BrandingBoard from "../components/branding/BrandingBoard";
-import { brandCases } from "../data/brandingMaterialsData";
+import { brandCases } from "../data/BrandingMaterialsData";
 
 function BrandingMaterialView() {
   const { brandSlug } = useParams();
