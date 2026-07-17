@@ -10,13 +10,15 @@
   },
   "dependencies": {
     "lucide-react": "latest",
+    "netlify": "^26.2.0",
+    "nodemailer": "^9.0.3",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
+    "netlify-cli": "^26.2.0",
     "vite": "latest"
   }
-  
 }

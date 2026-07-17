@@ -1,12 +1,69 @@
+import { useState } from "react";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 
 function Contact() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    service: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+
+  const handleChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setStatus("");
+
+    try {
+      const response = await fetch("/.netlify/functions/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send email");
+      }
+
+      setStatus("✅ Thank you! Your requirement has been sent successfully.");
+
+      setForm({
+        name: "",
+        email: "",
+        service: "",
+        message: "",
+      });
+    } catch (error) {
+      setStatus("❌ Something went wrong. Please try again.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <section className="page-hero">
         <div className="container">
           <span className="section-label dark-label">Contact Us</span>
+
           <h1>Commission Creative Work</h1>
+
           <p>
             Share your design requirement and our creative team will help you
             build professional visuals for your brand, campaign, business, or
@@ -20,7 +77,7 @@ function Contact() {
           <div className="contact-content">
             <span className="section-label">Get In Touch</span>
 
-            <h2>Let’s create something limitless</h2>
+            <h2>Let's create something limitless</h2>
 
             <p>
               Whether you need a logo, poster, UI design, branding kit, social
@@ -46,22 +103,64 @@ function Contact() {
             </div>
           </div>
 
-          <form className="contact-form">
+          <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-row">
-              <input type="text" placeholder="Your Name" />
-              <input type="email" placeholder="Email Address" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Your Name"
+                value={form.name}
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
             </div>
 
-            <input type="text" placeholder="Service Required" />
+            <input
+              type="text"
+              name="service"
+              placeholder="Service Required"
+              value={form.service}
+              onChange={handleChange}
+              required
+            />
 
             <textarea
-              rows="6"
+              rows={6}
+              name="message"
               placeholder="Tell us about your project requirement"
-            ></textarea>
+              value={form.message}
+              onChange={handleChange}
+              required
+            />
 
-            <button type="button" className="primary-btn">
-              Send Requirement <Send size={18} />
+            <button
+              type="submit"
+              className="primary-btn"
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Send Requirement"}
+              <Send size={18} />
             </button>
+
+            {status && (
+              <p
+                style={{
+                  marginTop: "20px",
+                  fontWeight: 600,
+                }}
+              >
+                {status}
+              </p>
+            )}
           </form>
         </div>
       </section>
